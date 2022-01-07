@@ -1,0 +1,7 @@
+[MASTER]
+
+extension-pkg-whitelist=pydantic
+
+[MESSAGES CONTROL]
+
+disable=C
