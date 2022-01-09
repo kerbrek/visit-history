@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 aioredis = {extras = ["hiredis"], version = "==2.0.*"}
-fastapi = "==0.70.*"
+fastapi = "==0.71.*"
 gunicorn = "==20.1.*"
 uvicorn = {extras = ["standard"], version = "==0.15.*"}
 validators = "==0.18.*"
