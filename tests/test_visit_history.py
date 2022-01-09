@@ -1,4 +1,3 @@
-import asyncio
 import time
 
 import pytest
@@ -32,13 +31,6 @@ reversed_params = {
     "from_": params["to"],
     "to": params["from_"],
 }
-
-
-@pytest.fixture(scope="module")
-def event_loop():
-    loop = asyncio.new_event_loop()
-    yield loop
-    loop.close()
 
 
 @pytest.fixture
