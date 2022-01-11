@@ -15,26 +15,26 @@ services:
 
     env_file:
       - ./ENV/.env.app
-    environment:
-      - REDIS_HOST=redis
+    # environment:
+      # - REDIS_HOST=redis
 
-    depends_on:
-      - redis
+    # depends_on:
+      # - redis
 
 
-  redis:
-    image: redis:6-alpine
-    command: redis-server --appendonly yes
-    restart: always
+  # redis:
+  #   image: redis:6-alpine
+  #   command: redis-server --appendonly yes
+  #   restart: always
 
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "5"
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "5"
 
-    volumes:
-      - redis_data:/data
+  #   volumes:
+  #     - redis_data:/data
 
 
   ## NGINX-LE  https://github.com/nginx-le/nginx-le
@@ -77,5 +77,5 @@ services:
       - web
 
 
-volumes:
-  redis_data:
+# volumes:
+#   redis_data:
