@@ -42,4 +42,4 @@ WORKDIR /app/mount
 
 EXPOSE 8000
 
-ENTRYPOINT ["/app/mount/entrypoint.sh"]
+ENTRYPOINT ["/app/mount/docker/entrypoint.sh"]

@@ -39,6 +39,6 @@ COPY --chown=app:app . /app
 
 EXPOSE 8000
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/app/docker/entrypoint.sh"]
 
 CMD ["gunicorn", "--config", "./gunicorn.conf.py", "visit_history.main:app"]

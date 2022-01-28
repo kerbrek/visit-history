@@ -2,8 +2,8 @@
 services:
   web:
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ./../
+      dockerfile: ./docker/Dockerfile
     image: visit-history-web
     restart: always
 
@@ -14,7 +14,7 @@ services:
         max-file: "5"
 
     env_file:
-      - ./ENV/.env.app
+      - ./../ENV/.env.app
     # environment:
       # - REDIS_HOST=redis
 
@@ -49,9 +49,9 @@ services:
         max-file: "5"
 
     volumes:
-      - ./etc/ssl:/etc/nginx/ssl
+      - ./../etc/ssl:/etc/nginx/ssl
       ## NOTE: Ensure to copy 'etc/service-example.conf' to 'etc/nginx/service-visit-history.conf' and modify it
-      - ./etc/nginx/service-visit-history.conf:/etc/nginx/service.conf
+      - ./../etc/nginx/service-visit-history.conf:/etc/nginx/service.conf
       # - ./etc/service-example.conf:/etc/nginx/service.conf
       # - ./etc/service-example-2.conf:/etc/nginx/service2.conf  # more services, should be service*.conf
       # - ./etc/stream-example-2.conf:/etc/nginx/stream2.conf  # more streams, should be stream*.conf
@@ -63,7 +63,7 @@ services:
       - "443:443"
 
     env_file:
-      - ./ENV/.env.nginx  # NOTE: Ensure to set LE_EMAIL and LE_FQDN variables
+      - ./../ENV/.env.nginx  # NOTE: Ensure to set LE_EMAIL and LE_FQDN variables
     environment:
       - TZ=UTC
       - LETSENCRYPT=true

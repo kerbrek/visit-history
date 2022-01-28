@@ -2,11 +2,11 @@
 services:
   web:
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ./../
+      dockerfile: ./docker/Dockerfile
     image: visit-history-web
     env_file:
-      - ./.env.example
+      - ./../.env.example
     environment:
       - REDIS_HOST=redis
     depends_on:
@@ -21,7 +21,7 @@ services:
   nginx:
     image: nginx:1-alpine
     volumes:
-      - ./etc/nginx/templates:/etc/nginx/templates
+      - ./../etc/nginx/templates:/etc/nginx/templates
     ports:
       - "8000:80"
     depends_on:

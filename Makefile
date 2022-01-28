@@ -92,33 +92,33 @@ requirements:
 
 .PHONY: up # Start Compose services
 up:
-	docker-compose pull redis nginx
-	docker-compose build --pull
-	docker-compose up
+	docker-compose -f docker/docker-compose.yml pull redis nginx
+	docker-compose -f docker/docker-compose.yml build --pull
+	docker-compose -f docker/docker-compose.yml up
 
 .PHONY: down # Stop Compose services
 down:
-	docker-compose down
+	docker-compose -f docker/docker-compose.yml down
 
 .PHONY: up-dev # Start Compose services (development)
 up-dev:
-	docker-compose -f docker-compose.dev.yml pull redis
-	docker-compose -f docker-compose.dev.yml build --pull
-	docker-compose -f docker-compose.dev.yml up
+	docker-compose -f docker/docker-compose.dev.yml pull redis
+	docker-compose -f docker/docker-compose.dev.yml build --pull
+	docker-compose -f docker/docker-compose.dev.yml up
 
 .PHONY: down-dev # Stop Compose services (development)
 down-dev:
-	docker-compose -f docker-compose.dev.yml down
+	docker-compose -f docker/docker-compose.dev.yml down
 
 .PHONY: up-debug # Start Compose services (debug)
 up-debug:
-	docker-compose -f docker-compose.debug.yml pull redis
-	docker-compose -f docker-compose.debug.yml build --pull
-	docker-compose -f docker-compose.debug.yml up
+	docker-compose -f docker/docker-compose.debug.yml pull redis
+	docker-compose -f docker/docker-compose.debug.yml build --pull
+	docker-compose -f docker/docker-compose.debug.yml up
 
 .PHONY: down-debug # Stop Compose services (debug)
 down-debug:
-	docker-compose -f docker-compose.debug.yml down
+	docker-compose -f docker/docker-compose.debug.yml down
 
 .PHONY: prod-prepare-files
 prod-prepare-files:
@@ -135,19 +135,19 @@ prod-prepare-files:
 .PHONY: prod-pull-build
 prod-pull-build:
 	@echo Pulling docker images...
-	docker-compose -f docker-compose.prod.yml pull nginx
+	docker-compose -f docker/docker-compose.prod.yml pull nginx
 	@echo Building docker images...
-	docker-compose -f docker-compose.prod.yml build --pull
+	docker-compose -f docker/docker-compose.prod.yml build --pull
 
 .PHONY: prod-up
 prod-up:
 	@echo Starting compose services...
-	docker-compose -f docker-compose.prod.yml up --detach
+	docker-compose -f docker/docker-compose.prod.yml up --detach
 
 .PHONY: prod-down
 prod-down:
 	@echo Stopping compose services...
-	docker-compose -f docker-compose.prod.yml down
+	docker-compose -f docker/docker-compose.prod.yml down
 
 .PHONY: prod-start
 prod-start: prod-pull-build prod-up
@@ -157,7 +157,7 @@ prod-restart: prod-pull-build prod-down prod-up
 
 .PHONY: prod-logs
 prod-logs:
-	docker-compose -f docker-compose.prod.yml logs --follow --tail=50
+	docker-compose -f docker/docker-compose.prod.yml logs --follow --tail=50
 
 .PHONY: help # Print list of targets with descriptions
 help:
