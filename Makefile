@@ -4,6 +4,12 @@ SHELL := /usr/bin/env bash
 
 project := visit_history
 
+docker_user := kerbrek
+docker_image := visit-history-web
+
+git_commit := $(shell git rev-parse --short HEAD)
+git_branch := $(shell git rev-parse --abbrev-ref HEAD)
+
 .PHONY: setup # Setup a working environment
 setup:
 	env PIPENV_VENV_IN_PROJECT=1 pipenv install --dev
@@ -120,44 +126,24 @@ up-debug:
 down-debug:
 	docker-compose -f docker/docker-compose.debug.yml down
 
-.PHONY: prod-prepare-files
-prod-prepare-files:
-	@mkdir -p ENV
-	@echo Copying files...
-	@cp --verbose .env.example ENV/.env.app
-	@cp --verbose .env.example ENV/.env.nginx
-	@cp --verbose etc/service-example.conf etc/nginx/service-visit-history.conf
-	@echo Do not forget to modify:
-	@echo - etc/nginx/service-visit-history.conf
-	@echo - ENV/.env.app
-	@echo - ENV/.env.nginx
+.PHONY: build # Build Docker image
+build:
+	docker build --pull \
+		--file docker/Dockerfile \
+		--tag ${docker_image}:${git_commit} \
+		--tag ${docker_image}:latest \
+		.
 
-.PHONY: prod-pull-build
-prod-pull-build:
-	@echo Pulling docker images...
-	docker-compose -f docker/docker-compose.prod.yml pull nginx
-	@echo Building docker images...
-	docker-compose -f docker/docker-compose.prod.yml build --pull
+.PHONY: release # Push Docker image to the registry
+release: build
+	docker tag ${docker_image}:${git_commit} ${docker_user}/${docker_image}:${git_commit}
+	docker tag ${docker_image}:latest ${docker_user}/${docker_image}:latest
+	docker push ${docker_user}/${docker_image}:${git_commit}
+	docker push ${docker_user}/${docker_image}:latest
 
-.PHONY: prod-up
-prod-up:
-	@echo Starting compose services...
-	docker-compose -f docker/docker-compose.prod.yml up --detach
-
-.PHONY: prod-down
-prod-down:
-	@echo Stopping compose services...
-	docker-compose -f docker/docker-compose.prod.yml down
-
-.PHONY: prod-start
-prod-start: prod-pull-build prod-up
-
-.PHONY: prod-restart
-prod-restart: prod-pull-build prod-down prod-up
-
-.PHONY: prod-logs
-prod-logs:
-	docker-compose -f docker/docker-compose.prod.yml logs --follow --tail=50
+.PHONY: deploy # Deploy application
+deploy:
+	cd ansible/ && ansible-playbook playbook.yml -i inventory.ini
 
 .PHONY: help # Print list of targets with descriptions
 help:

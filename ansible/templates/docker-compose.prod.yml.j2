@@ -1,0 +1,66 @@
+---
+services:
+  web:
+    image: {{ docker_user }}/visit-history-web:latest
+    restart: always
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+    environment:
+      - REDIS_HOST={{ redis_host }}
+      - REDIS_PORT={{ redis_port }}
+
+    # depends_on:
+    #   - redis
+
+
+  # redis:
+  #   image: redis:6-alpine
+  #   command: redis-server --appendonly yes
+  #   restart: always
+
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "5"
+
+  #   volumes:
+  #     - redis_data:/data
+
+
+  ## NGINX-LE  https://github.com/nginx-le/nginx-le
+  nginx:
+    image: umputun/nginx-le:latest
+    restart: always
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+    volumes:
+      - ./etc/ssl:/etc/nginx/ssl
+      - ./etc/service.conf:/etc/nginx/service.conf
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    environment:
+      - TZ=UTC
+      - LETSENCRYPT=true
+      - LE_EMAIL={{ le_email }}
+      - LE_FQDN={{ le_domain }},www.{{ le_domain }}
+
+    depends_on:
+      - web
+
+
+# volumes:
+#   redis_data:

@@ -1,3 +1,8 @@
+# Ansible
+ansible/vault
+ansible/vault.yml
+ansible/vault.yaml
+
 # NGINX-LE
 etc/ssl/
 etc/nginx/*.conf

@@ -1,0 +1,43 @@
+---
+# requires prepared vps https://github.com/kerbrek/ansible-prepare-vps
+
+- name: Deploy app
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - vault.yml
+
+  tasks:
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: ~/app/etc/
+        state: directory
+
+    - name: Template a file to ~/app/etc/service.conf
+      ansible.builtin.template:
+        src: ./templates/service.conf.j2
+        dest: ~/app/etc/service.conf
+        mode: '0644'
+
+    - name: Template a file to ~/app/docker-compose.yml
+      ansible.builtin.template:
+        src: ./templates/docker-compose.prod.yml.j2
+        dest: ~/app/docker-compose.yml
+        mode: '0644'
+
+    - name: Copy Makefile
+      ansible.builtin.copy:
+        src: ./files/Makefile
+        dest: ~/app/Makefile
+        mode: '0644'
+
+    - name: Log in to a Docker registry
+      ansible.builtin.shell: docker login -u {{ docker_user }} -p {{ docker_token }}
+
+    - name: (Re)Start app
+      ansible.builtin.shell: >
+        docker-compose pull
+        && docker-compose down
+        && docker-compose up --detach
+      args:
+        chdir: ~/app/
