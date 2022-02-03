@@ -11,9 +11,9 @@ RUN python -m venv /app/venv
 ENV PATH="/app/venv/bin:$PATH"
 
 COPY Pipfile.lock /tmp/
-RUN pipfile2req /tmp/Pipfile.lock > /tmp/requirments.txt \
-    && pipfile2req --dev /tmp/Pipfile.lock > /tmp/requirments-dev.txt \
-    && pip install --no-cache-dir -r /tmp/requirments.txt
+RUN pipfile2req --hashes /tmp/Pipfile.lock > /tmp/requirments.txt \
+    && pipfile2req --dev --hashes /tmp/Pipfile.lock > /tmp/requirments-dev.txt \
+    && pip install --no-cache-dir --require-hashes -r /tmp/requirments.txt
 
 #################################################################
 ####################### TARGET STAGE ############################
